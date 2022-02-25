@@ -25,7 +25,7 @@ while True:
     with open("pinglog.txt", "a", encoding='utf-8') as f:
         f.write('%d.%d %d %d.%d\n' % (st.second, st.microsecond, tar.second, nd.second, nd.microsecond))
     tar += timedelta(hours=9)  # UTC+9 맞추기
-    if (st - st_b).microseconds < 25000 and tar.second != tar_b.second:
+    if (st - st_b).total_seconds() < 0.025 and tar.second != tar_b.second:
         break
     st_b = st
     tar_b = tar
@@ -48,7 +48,7 @@ st_b -= ans_int
 ans_f = st_b
 ans_b = nd
 chk = []
-for _ in range(30):
+for _ in range(60):
     sleep(2 - st_b - datetime.now().microsecond/1000000 + uniform(-1.6 * avg_atp, 0.4 * avg_atp))
     t_st_b = datetime.now()
     t_tar_b = datetime.strptime(urllib.request.urlopen(req).headers['Date'], '%a, %d %b %Y %H:%M:%S %Z')
@@ -78,7 +78,7 @@ for _ in range(30):
 ans = (ans_b + ans_f) / 2
 print('\nFinal Error : %f ~ %f' % (ans_b, ans_f))
 print('Error : %.2fms' % ((ans_f - ans_b) * 1000))
-print('Front : %d Middle : %d Last : %d' % (chk.count(2), chk.count(1), chk.count(0)))
+print('Front : %d times, Middle : %d times, Last : %d times' % (chk.count(2), chk.count(1), chk.count(0)))
 print(ans, end='')
 
 with open("pinglog.txt", "a", encoding='utf-8') as f:

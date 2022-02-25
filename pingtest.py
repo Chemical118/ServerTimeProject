@@ -42,6 +42,7 @@ with open("pinglog.txt", "a", encoding='utf-8') as f:
     f.write('Error : %f ~ %f\n\n' % (nd, st_b))
     f.write('-----<Accurate mode>-------\n')
 ans_int = (st_b < 0) + int(st_b)
+st_b -= ans_int
 
 acnt = 0
 ans_b = False
@@ -60,16 +61,15 @@ while True:
         f.write('%d.%d %d %d.%d\n\n' % (t_st.second, t_st.microsecond, t_tar.second, t_nd.second, t_nd.microsecond))
     # print(t_st_b, t_tar_b, t_nd_b, t_tar, t_nd)
     # print((t_nd_b - t_st_b).total_seconds(), (t_nd - t_st).total_seconds())
-    if t_tar_b.second == t_tar.second and (t_nd_b - t_st_b).total_seconds() < 0.032 and (t_nd - t_st).total_seconds() < 0.032 and t_st < t_tar:
+    if t_tar_b.second == t_tar.second and (t_nd_b - t_st_b).total_seconds() < 0.032 and (t_nd - t_st).total_seconds() < 0.032 and t_st + timedelta(seconds=ans_int) < t_tar:
         acnt += 1
         print((t_tar_b - t_nd_b).total_seconds())
         if ans_b:
             ans_b = max(ans_b, (t_tar_b - t_nd_b).total_seconds())
         else:
             ans_b = (t_tar_b - t_nd_b).total_seconds()
-        if acnt == 15:
+        if acnt == 10:
             break
-ans_b += ans_int
 st_b += ans_int
 ans = (ans_b + st_b) / 2
 print('\nFinal Error : %f ~ %f' % (ans_b, st_b))

@@ -85,17 +85,3 @@ with open(fins, "a", encoding='utf-8') as f:
     f.write('\nFinal Error : %f ~ %f\n' % (ans_b, ans_f))
     f.write('Error %.2fms\n' % ((ans_f - ans_b) * 1000))
     f.write('%f' % (ans * 1000))
-
-with open("macro.js", "r", encoding='utf-8') as f:
-    code_list = f.readlines()
-    ploc_list = [(ind, val) for ind, val in enumerate(code_list) if "const lcpt =" in val]
-    if len(ploc_list) != 1:
-        print('macro.js를 확인해주세요\n')
-        for i in ploc_list:
-            print("%d번째 줄 : %s" % (i[0] + 1, i[1].lstrip()))  # 왼쪽 공백 자동 제거
-        f.close()
-        exit(len(ploc_list))
-    code_list[ploc_list[0][0] + 1] = "        " + str(round(ans * 1000, 6)) + ";\n"
-with open("macro.js", "w", encoding='utf-8') as f:
-    f.write(''.join(code_list))
-print('정상적으로 처리되었습니다 Answer : %.2fms' % (ans * 1000), end='')
